@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/POM/4.0.0">
+		 
+		 
+
+Feature: Trello API Testleri
+
+  Background:
+    * url 'https://api.trello.com/1'
+    * def authParams = { key: 'your-api-key', token: 'your-api-token' }
+
+  Scenario: Create a new Trello board
+    Given path 'boards'
+    And param name = 'Karate Test Board'
+    And param defaultLists = false
+    And param key = '#(authParams.key)'
+    And param token = '#(authParams.token)'
+    When method post
+    Then status 200
+    And match response.name == 'Karate Test Board'
+    * def boardId = response.id
+
+  Scenario: Create a new Trello list
+    Given path 'lists'
+    And param name = 'Karate Test List'
+    And param idBoard = '#(boardId)'
+    And param key = '#(authParams.key)'
+    And param token = '#(authParams.token)'
+    When method post
+    Then status 200
+    And match response.name == 'Karate Test List'
+    * def listId = response.id
+
+  Scenario: Create a new Trello card
+    Given path 'cards'
+    And param name = 'Karate Test Card'
+    And param idList = '#(listId)'
+    And param key = '#(authParams.key)'
+    And param token = '#(authParams.token)'
+    When method post
+    Then status 200
+    And match response.name == 'Karate Test Card'
+    * def cardId = response.id
+
+  Scenario: Update Trello card details
+    Given path 'cards', '#(cardId)'
+    And param name = 'Updated Karate Test Card'
+    And param key = '#(authParams.key)'
+    And param token = '#(authParams.token)'
+    When method put
+    Then status 200
+    And match response.name == 'Updated Karate Test Card'
+
+  Background:
+    * url 'https://api.trello.com/1'
+    * def authParams = { key: 'your-api-key', token: 'your-api-token' }
+
+  Scenario: Create a new Trello board
+    Given path 'boards'
+    And param name = 'Karate Test Board'
+    And param defaultLists = false
+    And param key = '#(authParams.key)'
+    And param token = '#(authParams.token)'
+    When method post
+    Then status 200
+    And match response.name == 'Karate Test Board'
+    * def boardId = response.id
+
+  Scenario: Create a new Trello list
+    Given path 'lists'
+    And param name = 'Karate Test List'
+    And param idBoard = '#(boardId)'
+    And param key = '#(authParams.key)'
+    And param token = '#(authParams.token)'
+    When method post
+    Then status 200
+    And match response.name == 'Karate Test List'
+    * def listId = response.id
+
+  Scenario: Create a new Trello card
+    Given path 'cards'
+    And param name = 'Karate Test Card'
+    And param idList = '#(listId)'
+    And param key = '#(authParams.key)'
+    And param token = '#(authParams.token)'
+    When method post
+    Then status 200
+    And match response.name == 'Karate Test Card'
+    * def cardId = response.id
+
+  Scenario: Update Trello card details
+    Given path 'cards', '#(cardId)'
+    And param name = 'Updated Karate Test Card'
+    And param key = '#(authParams.key)'
+    And param token = '#(authParams.token)'
+    When method put
+    Then status 200
+    And match response.name == 'Updated Karate Test Card'
+
+package com.example.tests;
+
+import com.intuit.karate.junit5.Karate;
+
+public class TrelloTests {
+    @Karate.Test
+    Karate testTrelloAPI() {
+        return Karate.run("trello").relativeTo(getClass());
+    }
+}import java.util.Map;
+
+public class Config {
+    public static Map<String, String> getAuthParams() {
+        return Map.of(
+            "key", System.getenv("TRELLO_API_KEY"),
+            "token", System.getenv("TRELLO_API_TOKEN")
+        );
+    }
+}
